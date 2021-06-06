@@ -72,10 +72,16 @@ def make_tracing_backend_decorator(Backend):
         if len(args) == 1 and callable(args[0]):
             (function,) = args
             argspec = inspect.getfullargspec(function)
-            if argspec.varargs or argspec.varkw or argspec.kwonlyargs:
+            if argspec.varargs: # NJ: modified to be able to handle a product of manifold with unspecified number of manifolds at the definition of the cost function
+                return Function(function, args=tuple(argspec.varargs), backend=Backend())
+            if argspec.varkw or argspec.kwonlyargs:
                 raise ValueError(
                     "Decorated function must only accept positional "
                     "arguments")
+            # if argspec.varargs or argspec.varkw or argspec.kwonlyargs:
+            #     raise ValueError(
+            #         "Decorated function must only accept positional "
+            #         "arguments")
             return Function(function, args=tuple(argspec.args),
                             backend=Backend())
 

@@ -27,6 +27,8 @@ def unpack_singleton_sequence_return_value(function):
     def wrapper(*args):
         result = function(*args)
         if not isinstance(result, (list, tuple)) or len(result) != 1:
+            if len(result) != 1:  # NJ: modified to be able to handle a product of manifold with unspecified number of manifolds at the definition of the cost function
+                return result
             raise ValueError("Function did not return a singleton sequence")
         return result[0]
     return wrapper
