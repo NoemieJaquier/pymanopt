@@ -49,9 +49,9 @@ class _PyTorchBackend(Backend):
         def wrapper(*args):
             x = function(*map(self._from_numpy, args))
             if type(x) in (list, tuple):
-                return [l.detach().numpy() for l in x]
+                return [l.cpu().detach().numpy() for l in x]
             else:
-                return x.detach().numpy()
+                return x.cpu().detach().numpy()
             # return function(*map(self._from_numpy, args)).detach().numpy()
         return wrapper
 
